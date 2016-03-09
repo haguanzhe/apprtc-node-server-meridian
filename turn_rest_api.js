@@ -13,7 +13,7 @@ var hmac = function (key, content) {
 app.get('/turn', function (req, resp) {
 
     var query = req.query;
-    var key = '4080218913'; // 这里的 key 是事先设置好的, 我们把他当成一个常亮来看, 所以就不从HTTP请求参数里读取了
+    var key = query['key'] ? query['key'] : '4080218913';
 
     if (!query['username']) {
         return resp.send({'error': 'AppError', 'message': 'Must provide username.'});
