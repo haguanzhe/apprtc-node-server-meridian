@@ -10,13 +10,12 @@ var hmac = function (key, content) {
     return method.read();
 };
 
-app.get('/turn', function (req, resp) {
-
+app.get('/turn', function (req, res) {
     var query = req.query;
     var key = query['key'] ? query['key'] : '4080218913';
 
     if (!query['username']) {
-        return resp.send({'error': 'AppError', 'message': 'Must provide username.'});
+        return res.send({'error': 'AppError', 'message': 'Must provide username.'});
     } else {
         var time_to_live = 600;
         var timestamp = Math.floor(Date.now() / 1000) + time_to_live;
@@ -25,7 +24,7 @@ app.get('/turn', function (req, resp) {
 
         //console.log('username: ' + turn_username);
 
-        resp.send({
+        res.send({
             username: turn_username,
             password: password,
             ttl: time_to_live,
