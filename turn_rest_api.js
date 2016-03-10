@@ -12,17 +12,16 @@ var hmac = function (key, content) {
 
 app.get('/turn', function (req, res) {
     var query = req.query;
-    var key = query['key'] ? query['key'] : '4080218913';
 
     if (!query['username']) {
         return res.send({'error': 'AppError', 'message': 'Must provide username.'});
     } else {
+        var key = query['key'] ? query['key'] : '4080218913';
+        console.log('username: ' +  query['username'] + ', key: ' + key);
         var time_to_live = 600;
         var timestamp = Math.floor(Date.now() / 1000) + time_to_live;
         var turn_username = timestamp + ':' + query['username'];
         var password = hmac(key, turn_username);
-
-        //console.log('username: ' + turn_username);
 
         res.send({
             username: turn_username,
@@ -39,5 +38,5 @@ app.get('/turn', function (req, res) {
 });
 
 app.listen('9000', function () {
-    console.log('server started');
+    console.log('Server started');
 });
