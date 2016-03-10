@@ -20,12 +20,10 @@ app.get('/turn', function (req, resp) {
     } else {
         var time_to_live = 600;
         var timestamp = Math.floor(Date.now() / 1000) + time_to_live;
-        //var timestamp = Math.round(new Date().getTime() / 1000) + time_to_live;
         var turn_username = timestamp + ':' + query['username'];
-        //var turn_username = query['username'] + ':' + timestamp;
         var password = hmac(key, turn_username);
 
-        console.log('username: ' + turn_username);
+        //console.log('username: ' + turn_username);
 
         resp.send({
             username: turn_username,
@@ -39,7 +37,6 @@ app.get('/turn', function (req, resp) {
             ]
         });
     }
-
 });
 
 app.listen('9000', function () {
