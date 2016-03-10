@@ -2,14 +2,10 @@ var express = require('express');
 var crypto = require('crypto');
 var app = express();
 
-var hmac = function (key, content) {
-    var method = crypto.createHmac('sha1', key);
-    method.setEncoding('base64');
-    method.write(content);
-    method.end();
-    return method.read();
-};
-
+/**
+ * TURN SERVER API 标准参看文档
+ * http://tools.ietf.org/html/draft-uberti-behave-turn-rest-00
+ */
 app.get('/turn', function (req, res) {
     var query = req.query;
 
@@ -17,7 +13,7 @@ app.get('/turn', function (req, res) {
         return res.send({'error': 'AppError', 'message': 'Must provide username.'});
     } else {
         var key = query['key'] ? query['key'] : '4080218913';
-        console.log('username: ' +  query['username'] + ', key: ' + key);
+        console.log('username: ' + query['username'] + ', key: ' + key);
         var time_to_live = 600;
         var timestamp = Math.floor(Date.now() / 1000) + time_to_live;
         var turn_username = timestamp + ':' + query['username'];
@@ -36,6 +32,14 @@ app.get('/turn', function (req, res) {
         });
     }
 });
+
+var hmac = function (key, content) {
+    var method = crypto.createHmac('sha1', key);
+    method.setEncoding('base64');
+    method.write(content);
+    method.end();
+    return method.read();
+};
 
 app.listen('9000', function () {
     console.log('Server started');
