@@ -11,7 +11,7 @@ var rooms = new Rooms();
 
 var constants = {
     LOOPBACK_CLIENT_ID: 'LOOPBACK_CLIENT_ID',
-    TURN_BASE_URL: 'http://218.241.151.250:8080',
+    TURN_BASE_URL: 'https://218.241.151.250',
     TURN_URL_TEMPLATE: '%s/turn?username=%s&key=%s',
     CEOD_KEY: '4080218913',
     WSS_HOST_ACTIVE_HOST_KEY: 'wss_host_active_host', //memcache key for the active collider host.
@@ -156,8 +156,8 @@ function getWSSParameters(req) {
             // 搜索 "wss:" 和 "https:" （注意冒号）
             // 可以在方法 get_wss_parameters 里搜索到， 这里需要把 wss: 替换成 ws:、把 https:
             // 替换成 http:，保存退出，就可以了。
-            wssUrl: 'ws://' + wssHostPortPair + '/ws',
-            wssPostUrl: 'http://' + wssHostPortPair,
+            wssUrl: 'wss://' + wssHostPortPair + '/ws',
+            wssPostUrl: 'https://' + wssHostPortPair,
             host: wssHostPortPair
         }
     }
@@ -299,10 +299,11 @@ function getRoomParameters(req, roomId, clientId, isInitiator) {
     };
 
     var protocol = req.headers['x-forwarded-proto'];
-    if (!protocol) protocol = "http";
+    if (!protocol) protocol = "https";
     if (roomId) {
         params['room_id'] = roomId;
-        params['room_link'] = protocol + "://" + req.headers.host + ':8080' + '/r/' + roomId + '?' + querystring.stringify(req.query);
+        //  + ':8080'
+        params['room_link'] = protocol + "://" + req.headers.host + '/r/' + roomId + '?' + querystring.stringify(req.query);
     }
     if (clientId) {
         params['client_id'] = clientId;

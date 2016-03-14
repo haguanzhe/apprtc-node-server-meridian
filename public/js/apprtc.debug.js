@@ -586,7 +586,12 @@ Call.prototype.hangup = function (async) {
         this.clearCleanupQueue_();
     }
     if (this.localStream_) {
-        this.localStream_.stop();
+        try {
+            this.localStream_.stop();
+        } catch (ex) {
+            console.log("Chrome " + ex);
+            this.localStream_.getVideoTracks()[0].stop();
+        }
         this.localStream_ = null;
     }
     if (!this.params_.roomId) {
@@ -2060,9 +2065,9 @@ function requestTurnServers(turnRequestUrl, turnTransports) {
             if (turnTransports.length > 0) {
                 filterTurnUrls(turnServerResponse.uris, turnTransports);
             }
-            console.log(turnServerResponse.uris);
-            console.log(turnServerResponse.username);
-            console.log(turnServerResponse.password);
+            //console.log(turnServerResponse.uris);
+            //console.log(turnServerResponse.username);
+            //console.log(turnServerResponse.password);
             var turnServers = createIceServers(turnServerResponse.uris, turnServerResponse.username, turnServerResponse.password);
             if (!turnServers) {
                 reject(Error("Error creating ICE servers from response."));
